@@ -1,25 +1,30 @@
-name: Launch OCI Instance                                                                          
-  "on":                                                                                              
-    workflow_dispatch:                                                                               
-    schedule:                                                                                        
-      - cron: '*/5 * * * *'                                                                          
-                                                                                                     
-  jobs:           
-    launch:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Setup PHP
-          uses: shivammathur/setup-php@v2
-          with:
-            php-version: '8.1'
-        - name: Install dependencies
-          run: composer install
-        - name: Setup OCI config
-          run: |
-            mkdir -p ~/.oci
-            echo "${{ secrets.OCI_CONFIG }}" > ~/.oci/config
-            echo "${{ secrets.OCI_KEY_FILE }}" > /tmp/oci_key.pem
-            chmod 600 /tmp/oci_key.pem
-        - name: Run script
-          run: php index.php
+name: Launch OCI Instance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Setup OCI config
+        run: |
+          mkdir -p ~/.oci
+          echo "${{ secrets.OCI_CONFIG }}" > ~/.oci/config
+          echo "${{ secrets.OCI_KEY_FILE }}" > /tmp/oci_key.pem
+          chmod 600 /tmp/oci_key.pem
+
+      - name: Run script
+        run: php index.php
