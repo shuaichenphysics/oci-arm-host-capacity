@@ -23,7 +23,8 @@ jobs:
         run: |
           mkdir -p ~/.oci
           echo "${{ secrets.OCI_CONFIG }}" > ~/.oci/config
-          echo "${{ secrets.OCI_KEY_FILE }}" > /tmp/oci_key.pem
+          echo "${{ secrets.OCI_KEY_FILE }}" > /tmp/oci_key_pkcs8.pem
+          openssl pkcs8 -topk8 -nocrypt -in /tmp/oci_key_pkcs8.pem -out /tmp/oci_key.pem 2>/dev/null || cp /tmp/oci_key_pkcs8.pem /tmp/oci_key.pem
           chmod 600 /tmp/oci_key.pem
 
       - name: Run script
